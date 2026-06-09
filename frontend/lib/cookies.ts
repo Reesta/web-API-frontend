@@ -1,31 +1,39 @@
-export const setCookie = (name: string, value: string, days = 7) => {
-  if (typeof document === "undefined") return;
+"use server";
 
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+import { cookies } from "next/headers";
 
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-};
+export async function setTokenCookie(token: string) {
+  const cookieStore = await cookies();
 
-export const getCookie = (name: string) => {
-  if (typeof document === "undefined") return null;
+  cookieStore.set({
+    name: "auth_token",
+    value: token,
+    path: "/", // 🔥 REQUIRED
+    httpOnly: true,
+    sameSite: "lax",
+  });
+}
 
-  const cookieName = `${name}=`;
-  const cookies = document.cookie.split(";");
+export async function getTokenCookie() {
+  const cookieStore = await cookies();
+  return cookieStore.get("auth_token")?.value || null;
+}
 
-  for (let cookie of cookies) {
-    cookie = cookie.trim();
+export async function storeUserData(userData: any) {
+  const cookieStore = await cookies();
 
-    if (cookie.startsWith(cookieName)) {
-      return cookie.substring(cookieName.length);
-    }
-  }
+  cookieStore.set({
+    name: "user_data",
+    value: JSON.stringify(userData),
+    path: "/", // 🔥 REQUIRED
+    httpOnly: true,
+    sameSite: "lax",
+  });
+}
 
-  return null;
-};
+export async function clearAuthCookies() {
+  const cookieStore = await cookies();
 
-export const removeCookie = (name: string) => {
-  if (typeof document === "undefined") return;
-
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
-};
+  cookieStore.delete("auth_token");
+  cookieStore.delete("user_data");
+}
