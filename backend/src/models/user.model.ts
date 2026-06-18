@@ -39,6 +39,11 @@ const UserMongoSchema: Schema<IUser> = new Schema(
       enum: ["admin", "user"],
       default: "user",
     },
+
+    profileImage: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

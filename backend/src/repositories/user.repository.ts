@@ -35,6 +35,7 @@ export class UserMongoRepository implements IUserRepository {
   async update(id: string, user: Partial<IUser>): Promise<IUser | null> {
     const updated = await UserModel.findByIdAndUpdate(id, user, {
       new: true,
+      runValidators: true,
     });
     return updated;
   }
