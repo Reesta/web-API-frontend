@@ -1,65 +1,6 @@
-import {
-  ArrowRight,
-  Bath,
-  Briefcase,
-  Flame,
-  Heater,
-  Soup,
-  Sparkles,
-  Utensils,
-  Wifi,
-} from "lucide-react";
-
-const stays = [
-  {
-    name: "Yeti Mountain Home",
-    price: "$850",
-    image: "/stay1.png",
-    description:
-      "Khumbu Region. A pinnacle of comfort at 3,800m featuring heated beds, gourmet cuisine,",
-    amenities: [Wifi, Briefcase, Flame],
-  },
-  {
-    name: "Ama Dablam Lodge",
-    price: "$1,200",
-    image: "/stay2.png",
-    description:
-      "Everest Base. High-tech shelter with pressurized suites and a 24/7 expedition support",
-    amenities: [Heater, Sparkles, Briefcase],
-  },
-  {
-    name: "Mustang Royal Retreat",
-    price: "$550",
-    image: "/stay3.png",
-    description:
-      "Upper Mustang. A bridge between tradition and luxury in the forbidden kingdom.",
-    amenities: [Bath, Utensils, Soup],
-  },
-  {
-    name: "Machapuchare Lodge",
-    price: "$320",
-    image: "/stay4.png",
-    description:
-      "Annapurna South. Serene forest retreat with therapeutic hot springs and organic farm",
-    amenities: [Soup, Flame, Sparkles],
-  },
-  {
-    name: "Langtang Zenith",
-    price: "$950",
-    image: "/stay5.png",
-    description:
-      "Langtang Valley. An architectural marvel perched at 4,200m, offering unmatched",
-    amenities: [Sparkles, Heater, Utensils],
-  },
-  {
-    name: "Thorang La Base",
-    price: "$480",
-    image: "/stay6.png",
-    description:
-      "Annapurna Circuit. Essential high-altitude refuge for trekkers crossing the pass,",
-    amenities: [Bath, Briefcase, Soup],
-  },
-];
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { stays } from "./stay-data";
 
 export default function StayPage() {
   return (
@@ -97,16 +38,21 @@ export default function StayPage() {
 
               <div className="mt-auto flex items-end justify-between gap-4">
                 <div className="flex min-h-[42px] items-end gap-3 text-[#e9a127]">
-                  {stay.amenities.map((Icon, index) => (
-                    <Icon key={`${stay.name}-${index}`} size={15} />
-                  ))}
+                  {stay.amenities.slice(0, 3).map((amenity) => {
+                    const Icon = amenity.icon;
+
+                    return (
+                      <Icon key={`${stay.name}-${amenity.label}`} size={15} />
+                    );
+                  })}
                 </div>
-                <button
+                <Link
+                  href={`/dashboard/stay/${stay.slug}`}
                   aria-label={`View ${stay.name}`}
                   className="flex h-[52px] w-[52px] shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-[#e9a127] text-[#121a18]"
                 >
                   <ArrowRight size={18} />
-                </button>
+                </Link>
               </div>
             </div>
           </article>

@@ -1,7 +1,52 @@
 import Link from "next/link";
-import { Clock, Mountain } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  Clock,
+  Compass,
+  MapPin,
+  Mountain,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { redirect } from "next/navigation";
 import { getCurrentUserAction } from "@/lib/actions/auth-action";
+
+const treks = [
+  {
+    title: "Everest Base Camp",
+    image: "/trails5.png",
+    difficulty: "Hard",
+    altitude: "5,364m",
+    duration: "8 Days",
+    text: "The classic route through Sherpa villages to the foot of Everest.",
+    href: "/dashboard/trails/everest-base-camp",
+  },
+  {
+    title: "Annapurna Base Camp",
+    image: "/trail6.png",
+    difficulty: "Mod",
+    altitude: "4,130m",
+    duration: "7 Days",
+    text: "A scenic sanctuary trek surrounded by the Annapurna massif.",
+    href: "/dashboard/trails/annapurna-base-camp",
+  },
+  {
+    title: "Gokyo Lakes",
+    image: "/trail7.png",
+    difficulty: "Hard",
+    altitude: "4,790m",
+    duration: "5 Days",
+    text: "Turquoise alpine lakes and wide Himalayan views above the clouds.",
+    href: "/dashboard/trails/gokyo-lakes",
+  },
+];
+
+const stats = [
+  { label: "Saved routes", value: "06", icon: Compass },
+  { label: "Planned days", value: "14", icon: CalendarDays },
+  { label: "Safe support", value: "24/7", icon: ShieldCheck },
+];
 
 export default async function DashboardPage() {
   const response = await getCurrentUserAction();
@@ -12,98 +57,184 @@ export default async function DashboardPage() {
 
   const user = response.data;
 
-  const treks = [
-    {
-      title: "Everest Base Camp",
-      image: "/mount.png",
-      difficulty: "Hard",
-      altitude: "5,364m",
-      duration: "8 Days",
-      text: "The classic journey to the foot of the world's highest peak.",
-    },
-    {
-      title: "Annapurna Base Camp",
-      image: "/home.png",
-      difficulty: "Mod",
-      altitude: "4,130m",
-      duration: "7 Days",
-      text: "A deep dive into the heart of the Annapurna massif.",
-    },
-    {
-      title: "Gokyo Lakes",
-      image: "/login.png",
-      difficulty: "Hard",
-      altitude: "4,790m",
-      duration: "5 Days",
-      text: "Emerald lakes and wide Himalayan views.",
-    },
-  ];
-
   return (
-    <section className="flex flex-col gap-[18px]">
-      <div className="flex items-center justify-between gap-[18px] max-[1000px]:flex-col max-[1000px]:items-start">
-        <div>
-          <h1 className="text-[32px] font-black leading-tight text-[#f3f5f6]">
-            Welcome Back, {user.fullName}!
-          </h1>
-          <p className="mt-1.5 text-[15px] text-[#aeb8c3]">Ready for your next adventure?</p>
+    <section className="grid gap-8">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_310px]">
+        <div className="relative min-h-[360px] overflow-hidden rounded-[22px] bg-[linear-gradient(90deg,rgba(4,8,13,0.9),rgba(4,8,13,0.45)),url('/trail1.png')] bg-cover bg-center p-10 shadow-2xl shadow-black/30 max-[700px]:p-6">
+          <div className="relative z-10 max-w-[650px]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#e9a127]/30 bg-black/25 px-4 py-2 text-xs font-black uppercase tracking-wider text-[#e9a127] backdrop-blur">
+              <Sparkles size={14} />
+              Trek dashboard
+            </span>
+
+            <h1 className="mt-7 text-[48px] font-black leading-tight text-white max-[700px]:text-4xl">
+              Welcome back, {user.fullName}.
+            </h1>
+
+            <p className="mt-5 max-w-[560px] text-base leading-8 text-[#d7dfdf]">
+              Plan routes, compare lodges, and keep your Himalayan adventure
+              organized from one calm workspace.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/dashboard/trails"
+                className="inline-flex h-12 items-center gap-2 rounded-lg bg-[#e9a127] px-6 text-sm font-black text-[#121a18]"
+              >
+                Explore Trails
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/dashboard/stay"
+                className="inline-flex h-12 items-center gap-2 rounded-lg border border-white/10 bg-[#101719]/85 px-6 text-sm font-black text-white backdrop-blur transition hover:border-[#e9a127]"
+              >
+                Find Stays
+              </Link>
+            </div>
+          </div>
         </div>
 
+        <aside className="grid gap-4 rounded-[22px] border border-white/10 bg-[#0d1314] p-5 shadow-2xl shadow-black/20">
+          <div className="rounded-2xl bg-[#11191b] p-5">
+            <p className="text-xs font-black uppercase tracking-wider text-[#e9a127]">
+              Next pick
+            </p>
+            <h2 className="mt-4 text-2xl font-black leading-tight text-white">
+              Majestic High-Altitude Lodge
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-[#9aa4a3]">
+              A warm mountain stay with comfort before the next trail day.
+            </p>
+            <Link
+              href="/dashboard/stay/yeti-mountain-home"
+              className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#e9a127] text-sm font-black text-[#121a18]"
+            >
+              View Details
+              <ArrowRight size={15} />
+            </Link>
+          </div>
+
+          <div className="grid gap-3">
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+
+              return (
+                <div
+                  key={stat.label}
+                  className="flex items-center justify-between rounded-xl border border-white/10 bg-[#11191b] p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#e9a127]/15 text-[#e9a127]">
+                      <Icon size={18} />
+                    </span>
+                    <span className="text-sm font-semibold text-[#b9c2c1]">
+                      {stat.label}
+                    </span>
+                  </div>
+                  <strong className="text-lg font-black text-white">{stat.value}</strong>
+                </div>
+              );
+            })}
+          </div>
+        </aside>
       </div>
 
-      <div className="flex min-h-[220px] items-end justify-between gap-6 overflow-hidden rounded-[14px] bg-[linear-gradient(90deg,rgba(5,11,18,0.78),rgba(5,11,18,0.2)),url('/home.png')] bg-cover bg-center px-8 py-7 max-[1000px]:min-h-[260px] max-[1000px]:flex-col max-[1000px]:items-start">
+      <div className="flex items-end justify-between gap-5 max-[700px]:flex-col max-[700px]:items-start">
         <div>
-          <h2 className="max-w-[520px] text-[34px] font-black leading-tight text-white">
-            Majestic High-Altitude Lodge
-          </h2>
-          <p className="mt-5 max-w-[420px] text-base leading-relaxed text-[#e1e6ec]">
-            Experience luxury and comfort at the heart of the Himalayas.
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#e9a127]">
+            Recommended
           </p>
+          <h2 className="mt-2 text-3xl font-black text-white">Popular Treks</h2>
         </div>
         <Link
-          href="/dashboard/stay"
-          className="flex h-12 min-w-40 items-center justify-center rounded-lg bg-[#e0a12b] font-black text-[#111]"
+          href="/dashboard/trails"
+          className="text-sm font-black text-[#e9a127] transition hover:text-[#f0b13d]"
         >
-          View Details
+          View All
         </Link>
       </div>
 
-      <div className="mt-0.5 flex items-center justify-between">
-        <h2 className="text-[19px] font-black text-[#f4f4f4]">Popular Treks</h2>
-        <span className="text-[13px] font-bold text-[#e0a12b]">View All</span>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 max-[1000px]:grid-cols-1">
+      <div className="grid grid-cols-3 gap-6 max-[1100px]:grid-cols-2 max-[700px]:grid-cols-1">
         {treks.map((trek) => (
-          <article key={trek.title} className="overflow-hidden rounded-[13px] border border-white/10 bg-[#282c2d]">
+          <article
+            key={trek.title}
+            className="overflow-hidden rounded-[18px] border border-white/10 bg-[#0d1314] shadow-xl shadow-black/20 transition hover:-translate-y-1"
+          >
             <div
-              className="relative h-[158px] bg-cover bg-center"
+              className="relative h-[210px] bg-cover bg-center"
               style={{ backgroundImage: `url(${trek.image})` }}
             >
-              <span className="absolute right-3 top-3 rounded-full bg-[#b92026] px-2 py-1 text-[10px] font-black uppercase text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0d1314] via-transparent to-transparent" />
+              <span className="absolute right-4 top-4 rounded-full bg-[#e42d4f] px-3 py-1 text-[10px] font-black uppercase text-white">
                 {trek.difficulty}
               </span>
             </div>
-            <div className="p-[18px]">
-              <h3 className="text-base font-black text-white">{trek.title}</h3>
-              <p className="mt-2 min-h-[42px] text-[13px] leading-snug text-[#a7b0bb]">{trek.text}</p>
 
-              <div className="mt-5 flex justify-between">
-                <div className="grid gap-1">
-                  <Mountain size={15} className="text-[#e0a12b]" />
-                  <small className="text-[10px] font-black uppercase text-[#7f8b98]">Altitude</small>
-                  <strong className="text-[13px] text-[#f3f3f3]">{trek.altitude}</strong>
-                </div>
-                <div className="grid gap-1">
-                  <Clock size={15} className="text-[#e0a12b]" />
-                  <small className="text-[10px] font-black uppercase text-[#7f8b98]">Duration</small>
-                  <strong className="text-[13px] text-[#f3f3f3]">{trek.duration}</strong>
-                </div>
+            <div className="p-6">
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="text-xl font-black text-white">{trek.title}</h3>
+                <Link
+                  href={trek.href}
+                  aria-label={`Open ${trek.title}`}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e9a127] text-[#121a18]"
+                >
+                  <ArrowRight size={15} />
+                </Link>
+              </div>
+
+              <p className="mt-3 min-h-[52px] text-sm leading-6 text-[#aeb5b4]">
+                {trek.text}
+              </p>
+
+              <div className="mt-6 grid grid-cols-2 gap-4 border-t border-white/10 pt-5">
+                <Meta icon={<Mountain size={16} />} label="Altitude" value={trek.altitude} />
+                <Meta icon={<Clock size={16} />} label="Duration" value={trek.duration} />
               </div>
             </div>
           </article>
         ))}
       </div>
+
+      <div className="grid gap-5 rounded-[22px] border border-white/10 bg-[#0d1314] p-6 shadow-xl shadow-black/20 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <p className="text-xs font-black uppercase tracking-wider text-[#e9a127]">
+            Trek planning
+          </p>
+          <h2 className="mt-2 text-2xl font-black text-white">
+            Ready to build a full route with lodges?
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-[#9aa4a3]">
+            Open a trail detail page and plan each trekking day with suitable stays.
+          </p>
+        </div>
+        <Link
+          href="/dashboard/trails/everest-base-camp/plan"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#e9a127] px-6 text-sm font-black text-[#121a18]"
+        >
+          Plan Trek
+          <MapPin size={16} />
+        </Link>
+      </div>
     </section>
+  );
+}
+
+function Meta({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 text-[#e9a127]">{icon}</div>
+      <p className="mt-2 text-[10px] font-black uppercase tracking-wider text-[#8c9695]">
+        {label}
+      </p>
+      <strong className="mt-1 block text-sm font-black text-white">{value}</strong>
+    </div>
   );
 }
