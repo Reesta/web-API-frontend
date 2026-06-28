@@ -8,6 +8,8 @@ import {
   RegisterPayload,
   updateProfileApi,
   whoamiApi,
+  requestPasswordResetApi,
+  resetPasswordApi,
 } from "../api/auth";
 
 import {
@@ -120,4 +122,20 @@ export const logoutAction = async () => {
     success: true,
     message: "Logged out successfully",
   };
+};
+
+export const requestPasswordResetAction = async (email: string) => {
+  try {
+    return await requestPasswordResetApi(email);
+  } catch (error: unknown) {
+    return getActionError(error, "Unable to send password reset email");
+  }
+};
+
+export const resetPasswordAction = async (token: string, newPassword: string) => {
+  try {
+    return await resetPasswordApi(token, newPassword);
+  } catch (error: unknown) {
+    return getActionError(error, "Unable to reset password");
+  }
 };
