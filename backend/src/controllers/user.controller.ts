@@ -1,6 +1,12 @@
 import { UserService } from "../services/user.service";
 import { z } from "zod";
-import { CreateUserDTO, LoginUserDTO, UpdateUserDTO } from "../dtos/user.dto";
+import {
+  CreateUserDTO,
+  LoginUserDTO,
+  RequestPasswordResetDTO,
+  ResetPasswordDTO,
+  UpdateUserDTO,
+} from "../dtos/user.dto";
 import { Request, Response } from "express";
 import { ApiResponseHelper } from "../uttils/apihelper.util";
  
@@ -123,6 +129,51 @@ export class UserController {
       return ApiResponseHelper.error(
         res,
         error.message || "Internal Server Error",
+        error.status || 500,
+      );
+    }
+  }
+
+  async requestPasswordReset(req: Request, res: Response) {
+    try {
+      const parsedData = RequestPasswordResetDTO.safeParse(req.body);
+      if (!parsedData.success) {
+        return ApiResponseHelper.error(res, z.prettifyError(parsedData.error), 400);
+      }
+
+      await userService.sendResetPasswordEmail(parsedData.data.email);
+      return ApiResponseHelper.success(
+        res,
+        null,
+        "Password reset link sent to your email",
+      );
+    } catch (error: Error | any) {
+      return ApiResponseHelper.error(
+        res,
+        error.message || "Unable to request password reset",
+        error.status || 500,
+      );
+    }
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const token = req.params.token as string;
+      const parsedData = ResetPasswordDTO.safeParse(req.body);
+      if (!token || !parsedData.success) {
+        return ApiResponseHelper.error(
+          res,
+          parsedData.success ? "Reset token is required" : z.prettifyError(parsedData.error),
+          400,
+        );
+      }
+
+      await userService.resetPassword(token, parsedData.data.newPassword);
+      return ApiResponseHelper.success(res, null, "Password reset successfully");
+    } catch (error: Error | any) {
+      return ApiResponseHelper.error(
+        res,
+        error.message || "Unable to reset password",
         error.status || 500,
       );
     }

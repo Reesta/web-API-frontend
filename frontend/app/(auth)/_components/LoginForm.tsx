@@ -119,6 +119,14 @@ export default function LoginForm() {
                   onChange={handleChange}
                 />
               </div>
+              <div className="mt-3 text-right">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm font-semibold text-[#e0a12b] transition hover:text-[#f2c400]"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
             <div className="mb-5">
@@ -151,6 +159,15 @@ export default function LoginForm() {
               Register
             </Link>
           </p>
+
+          <div className="mt-5 border-t border-white/10 pt-5 text-center">
+            <Link
+              href="/admin/login"
+              className="text-sm font-bold text-[#e0a12b] transition hover:text-[#f2c400]"
+            >
+              Login as Admin
+            </Link>
+          </div>
         </div>
       </div>
     </div>

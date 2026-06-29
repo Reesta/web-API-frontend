@@ -8,6 +8,8 @@ const userController = new UserController();
  
 userRouter.post("/register", userController.createUser);
 userRouter.post("/login", userController.loginUser);
+userRouter.post("/request-password-reset", userController.requestPasswordReset);
+userRouter.post("/reset-password/:token", userController.resetPassword);
 userRouter.get("/whoami", authMiddleware, userController.getLoggedInUser);
 userRouter.patch(
   "/update",

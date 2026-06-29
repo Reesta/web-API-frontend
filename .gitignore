@@ -12,6 +12,8 @@ backend/.env
 node_modules/
 .env
 .agents/
+.idea/
+backend/.idea/
 .codex/
 frontend/next-dev.log
 frontend/next-dev.err.log

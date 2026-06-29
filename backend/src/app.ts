@@ -3,6 +3,7 @@ import cors from "cors";
 import path from "path";
 import multer from "multer";
 import userRoutes from "../src/routes/user.route";
+import adminUserRoutes from "../src/routes/admin/user.route";
 
 const app: Application = express();
 
@@ -25,6 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/admin/users", adminUserRoutes);
 
 app.use((req: Request, res: Response) => {
   return res.status(404).json({

@@ -54,3 +54,22 @@ export const validateLoginForm = (values: LoginFormValues) => {
 
   return "";
 };
+
+export const RequestPasswordResetSchema = z.object({
+  email: z.string().email("Enter a valid email address"),
+});
+
+export type RequestPasswordResetValues = z.infer<typeof RequestPasswordResetSchema>;
+
+export const ResetPasswordSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().min(6, "Confirm your new password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type ResetPasswordValues = z.infer<typeof ResetPasswordSchema>;
+import { z } from "zod";

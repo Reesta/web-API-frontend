@@ -51,3 +51,18 @@ export const updateProfileApi = async (payload: FormData, token: string) => {
 
   return response.data;
 };
+
+export const requestPasswordResetApi = async (email: string) => {
+  const response = await axiosInstance.post(
+    AUTH_ENDPOINTS.REQUEST_PASSWORD_RESET,
+    { email },
+  );
+  return response.data;
+};
+
+export const resetPasswordApi = async (token: string, newPassword: string) => {
+  const response = await axiosInstance.post(AUTH_ENDPOINTS.RESET_PASSWORD(token), {
+    newPassword,
+  });
+  return response.data;
+};

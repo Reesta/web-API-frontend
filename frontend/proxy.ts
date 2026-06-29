@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard"];
-const publicRoutes = ["/", "/login", "/register"];
+const protectedRoutes = ["/dashboard", "/admin/dashboard"];
+const publicRoutes = ["/", "/login", "/register", "/admin/login"];
 
 export  function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -12,7 +12,10 @@ export  function proxy(request: NextRequest) {
   const isPublicRoute = publicRoutes.includes(pathname);
 
   if (isProtectedRoute && !token) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = new URL(
+      pathname.startsWith("/admin") ? "/admin/login" : "/login",
+      request.url,
+    );
     loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
   }
@@ -25,5 +28,5 @@ export  function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/register"],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/register"],
 };
