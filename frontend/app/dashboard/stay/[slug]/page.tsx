@@ -10,7 +10,10 @@ import {
   Users,
 } from "lucide-react";
 import { notFound } from "next/navigation";
-import { stays } from "../stay-data";
+import { getStayBySlugAction } from "@/lib/actions/stay-action";
+import { Stay } from "@/lib/api/stays";
+import { resolveImageUrl } from "@/lib/api/image-url";
+import { getAmenityIcon } from "@/lib/stay-amenities";
 
 export default async function StayDetailPage({
   params,
@@ -18,11 +21,16 @@ export default async function StayDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const stay = stays.find((item) => item.slug === slug);
+  const result = await getStayBySlugAction(slug);
+  const stay = result.success ? (result.data as Stay | null) : null;
 
   if (!stay) {
     notFound();
   }
+
+  const galleryImages = stay.galleryImages?.length
+    ? stay.galleryImages
+    : [stay.image];
 
   return (
     <section className="grid gap-8">
@@ -38,9 +46,10 @@ export default async function StayDetailPage({
         <article className="overflow-hidden rounded-[18px] border border-white/10 bg-[#0d1314] shadow-2xl shadow-black/30">
           <div className="relative h-[360px] overflow-hidden max-[700px]:h-[240px]">
             <Image
-              src={stay.image}
+              src={resolveImageUrl(stay.image)}
               alt={stay.name}
               fill
+              unoptimized
               sizes="(min-width: 1024px) 760px, 100vw"
               className="object-cover"
             />
@@ -75,15 +84,15 @@ export default async function StayDetailPage({
 
             <div className="mt-6 grid grid-cols-4 divide-x divide-white/10 max-[700px]:grid-cols-2 max-[700px]:divide-x-0 max-[700px]:gap-5">
               {stay.amenities.map((amenity) => {
-                const Icon = amenity.icon;
+                const Icon = getAmenityIcon(amenity);
 
                 return (
                   <div
-                    key={amenity.label}
+                    key={amenity}
                     className="grid justify-items-center gap-2 px-4 text-center text-xs font-semibold text-white"
                   >
                     <Icon size={28} className="text-[#e9a127]" />
-                    <span>{amenity.label}</span>
+                    <span>{amenity}</span>
                   </div>
                 );
               })}
@@ -100,12 +109,13 @@ export default async function StayDetailPage({
             </p>
 
             <div className="mt-6 grid grid-cols-4 gap-3 max-[700px]:grid-cols-2">
-              {[stay.image, "/stay2.png", "/stay4.png", "/trail1.png"].map((image, index) => (
+              {galleryImages.map((image, index) => (
                 <div key={`${image}-${index}`} className="relative h-[130px] overflow-hidden rounded-lg border border-white/10">
                   <Image
-                    src={image}
+                    src={resolveImageUrl(image)}
                     alt={`${stay.name} gallery`}
                     fill
+                    unoptimized
                     sizes="180px"
                     className="object-cover"
                   />
