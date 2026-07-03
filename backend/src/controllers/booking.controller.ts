@@ -37,9 +37,7 @@ export class BookingController {
         return ApiResponseHelper.error(res, "Unauthorized", 401);
       }
 
-      const userEmail =
-        typeof req.user?.email === "string" ? req.user.email : undefined;
-      const bookings = await bookingService.getUserBookings(userId, userEmail);
+      const bookings = await bookingService.getUserBookings(userId);
       return ApiResponseHelper.success(res, bookings, "Bookings fetched successfully");
     } catch (error: Error | any) {
       return ApiResponseHelper.error(
