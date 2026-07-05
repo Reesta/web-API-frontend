@@ -1,10 +1,7 @@
 import Image from "next/image";
 import { User } from "lucide-react";
 import { YetiTrekUser } from "@/lib/api/auth";
-
-const apiRoot =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/api\/v1$/, "") ||
-  "http://localhost:4000";
+import { resolveImageUrl } from "@/lib/api/image-url";
 
 export default function ProfileImage({
   user,
@@ -13,9 +10,7 @@ export default function ProfileImage({
   user: YetiTrekUser;
   size?: "small" | "large";
 }) {
-  const imageUrl = user.profileImage?.startsWith("/uploads")
-    ? `${apiRoot}${user.profileImage}`
-    : user.profileImage;
+  const imageUrl = resolveImageUrl(user.profileImage);
   const dimensions = size === "small" ? "h-11 w-11" : "h-28 w-28";
   const iconSize = size === "small" ? 20 : 44;
 
