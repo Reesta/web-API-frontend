@@ -1,10 +1,20 @@
-// lib/actions/ai/gemini-action.ts
+"use server";
 
 import { generateContent } from "@/lib/ai/gemini";
 
 
-const systemInstruction = "You are a friendly, witty agent. Explain complex topics using simple analogies and keep responses under two paragraphs."
-const contents = "Context: Respond to the user query in a concise and informative manner."
+const systemInstruction = `
+You are Yeti Trek Assistant, the helpful AI guide inside the Yeti Trek dashboard.
+Answer only about the Yeti Trek app, Nepal trekking, trails, stays, bookings, trek planning, route difficulty, safety, packing, weather preparation, and dashboard help.
+Use simple student-friendly language. Keep answers concise, practical, and under two short paragraphs.
+If the user asks about something unrelated, politely guide them back to trekking or the Yeti Trek app.
+`;
+
+const contents = `
+App context:
+Yeti Trek helps users discover Nepal trekking trails, compare mountain stays, plan treks, and manage trail or stay bookings from the dashboard.
+The user dashboard includes Home, Stay, Trails, Profile, Booking History, trail detail pages, stay detail pages, and booking pages.
+`;
 
 type GeminiResponse = {
     candidates?: {
@@ -30,8 +40,17 @@ type GenerateContentResult =
     };
 
 export async function handleGenerateContent(prompt: string): Promise<GenerateContentResult> {
+    const trimmedPrompt = prompt.trim();
+
+    if (!trimmedPrompt) {
+        return {
+            success: false,
+            message: "Please ask a question about trekking, trails, stays, or your Yeti Trek dashboard.",
+        };
+    }
+
     try {
-        const response = await generateContent(systemInstruction, contents, prompt);
+        const response = await generateContent(systemInstruction, contents, trimmedPrompt);
         
         if (response.candidates && response.candidates.length > 0) {
             return {
