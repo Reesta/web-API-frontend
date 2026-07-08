@@ -10,6 +10,8 @@ import stayRoutes from "../src/routes/stay.route";
 import adminStayRoutes from "../src/routes/admin/stay.route";
 import bookingRoutes from "../src/routes/booking.route";
 import adminBookingRoutes from "../src/routes/admin/booking.route";
+import blogRoutes from "../src/routes/blog.route";
+import adminBlogRoutes from "../src/routes/admin/blog.route";
 
 const app: Application = express();
 
@@ -35,10 +37,12 @@ app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/trails", trailRoutes);
 app.use("/api/v1/stays", stayRoutes);
 app.use("/api/v1/bookings", bookingRoutes);
+app.use("/api/v1/blogs", blogRoutes);
 app.use("/api/v1/admin/users", adminUserRoutes);
 app.use("/api/v1/admin/trails", adminTrailRoutes);
 app.use("/api/v1/admin/stays", adminStayRoutes);
 app.use("/api/v1/admin/bookings", adminBookingRoutes);
+app.use("/api/v1/admin/blogs", adminBlogRoutes);
 
 app.use((req: Request, res: Response) => {
   return res.status(404).json({
