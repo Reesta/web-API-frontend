@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import multer from "multer";
 
-const imageStorage = (folder: "profile" | "trails" | "stays" | "blogs") => multer.diskStorage({
+const imageStorage = (folder: "profile" | "trails" | "stays" | "blogs" | "reviews") => multer.diskStorage({
   destination: (_req, _file, callback) => {
     const destination = `uploads/${folder}`;
     fs.mkdirSync(destination, { recursive: true });
@@ -25,7 +25,7 @@ const imageFileFilter: multer.Options["fileFilter"] = (_req, file, callback) => 
   return callback(null, true);
 };
 
-const imageUpload = (folder: "profile" | "trails" | "stays" | "blogs") => multer({
+const imageUpload = (folder: "profile" | "trails" | "stays" | "blogs" | "reviews") => multer({
   storage: imageStorage(folder),
   limits: {
     fileSize: 5 * 1024 * 1024,
@@ -37,3 +37,4 @@ export const profileUpload = imageUpload("profile");
 export const trailUpload = imageUpload("trails");
 export const stayUpload = imageUpload("stays");
 export const blogUpload = imageUpload("blogs");
+export const reviewUpload = imageUpload("reviews");
