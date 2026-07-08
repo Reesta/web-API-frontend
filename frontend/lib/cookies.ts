@@ -52,4 +52,20 @@ export async function clearAuthCookies() {
 
   cookieStore.delete("auth_token");
   cookieStore.delete("user_data");
+  cookieStore.set({
+    name: "auth_token",
+    value: "",
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    expires: new Date(0),
+  });
+  cookieStore.set({
+    name: "user_data",
+    value: "",
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    expires: new Date(0),
+  });
 }

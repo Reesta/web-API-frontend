@@ -9,8 +9,11 @@ import { Stay } from "@/lib/api/stays";
 
 export default function StayBookingClient({ stay }: { stay: Stay }) {
   const [guests, setGuests] = useState(2);
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
   const nightlyPrice = parseMoney(stay.price);
-  const total = nightlyPrice * guests;
+  const nights = getStayNights(checkInDate, checkOutDate);
+  const total = nightlyPrice * guests * nights;
   const amount = formatMoney(total || nightlyPrice);
 
   return (
@@ -31,15 +34,30 @@ export default function StayBookingClient({ stay }: { stay: Stay }) {
           <Field name="fullName" icon={<UserRound size={16} />} label="Full Name" placeholder="Your name" />
           <Field name="email" icon={<Mail size={16} />} label="Email" placeholder="you@example.com" />
           <Field name="phone" icon={<Phone size={16} />} label="Phone" placeholder="+977 98XXXXXXXX" />
-          <Field name="startDate" icon={<CalendarDays size={16} />} label="Check-in Date" type="date" />
-          <Field name="endDate" icon={<CalendarDays size={16} />} label="Check-out Date" type="date" />
+          <Field
+            name="startDate"
+            icon={<CalendarDays size={16} />}
+            label="Check-in Date"
+            type="date"
+            value={checkInDate}
+            onChange={setCheckInDate}
+          />
+          <Field
+            name="endDate"
+            icon={<CalendarDays size={16} />}
+            label="Check-out Date"
+            type="date"
+            value={checkOutDate}
+            min={checkInDate || undefined}
+            onChange={setCheckOutDate}
+          />
           <Field
             name="travelers"
             icon={<Users size={16} />}
             label="Guests"
             type="number"
             value={guests}
-            onChange={(value) => setGuests(Math.max(1, value))}
+            onChange={(value) => setGuests(Math.max(1, Number(value) || 1))}
           />
         </div>
 
@@ -74,6 +92,10 @@ export default function StayBookingClient({ stay }: { stay: Stay }) {
             <span>{stay.price}</span>
           </div>
           <div className="mt-3 flex items-center justify-between text-sm text-[#9aa4a3]">
+            <span>Nights</span>
+            <span>x {nights}</span>
+          </div>
+          <div className="mt-3 flex items-center justify-between text-sm text-[#9aa4a3]">
             <span>Guests</span>
             <span>x {guests}</span>
           </div>
@@ -85,7 +107,9 @@ export default function StayBookingClient({ stay }: { stay: Stay }) {
               {amount}
             </strong>
           </div>
-          <span className="mt-2 block text-xs text-[#8e9898]">per night before taxes</span>
+          <span className="mt-2 block text-xs text-[#8e9898]">
+            {stay.price} x {nights} night{nights === 1 ? "" : "s"} x {guests} guest{guests === 1 ? "" : "s"}
+          </span>
         </div>
       </aside>
     </div>
@@ -99,6 +123,7 @@ function Field({
   placeholder,
   type = "text",
   value,
+  min,
   onChange,
 }: {
   name: string;
@@ -106,8 +131,9 @@ function Field({
   label: string;
   placeholder?: string;
   type?: string;
-  value?: number;
-  onChange?: (value: number) => void;
+  value?: number | string;
+  min?: number | string;
+  onChange?: (value: string) => void;
 }) {
   return (
     <label className="grid gap-2 text-sm font-bold text-white">
@@ -118,9 +144,9 @@ function Field({
           name={name}
           type={type}
           value={value}
-          onChange={(event) => onChange?.(Number(event.target.value) || 1)}
+          onChange={(event) => onChange?.(event.target.value)}
           placeholder={placeholder}
-          min={type === "number" ? 1 : undefined}
+          min={min ?? (type === "number" ? 1 : undefined)}
           className="min-w-0 flex-1 bg-transparent text-sm font-medium text-white outline-none placeholder:text-[#687271]"
         />
       </span>
@@ -130,6 +156,19 @@ function Field({
 
 function parseMoney(value: string) {
   return Number(value.replace(/[^\d]/g, "")) || 0;
+}
+
+function getStayNights(startDate: string, endDate: string) {
+  if (!startDate || !endDate) {
+    return 1;
+  }
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const difference = end.getTime() - start.getTime();
+  const nights = Math.ceil(difference / (1000 * 60 * 60 * 24));
+
+  return nights > 0 ? nights : 1;
 }
 
 function formatMoney(value: number) {

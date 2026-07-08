@@ -72,7 +72,7 @@ export default function Page() {
         try {
             const result = await handleGenerateContent(trimmedPrompt);
             const resultData = result.success
-                ? formatMessage(result.data.candidates?.[0]?.content?.parts?.[0]?.text)
+                ? formatMessage(result.answer)
                 : result.message || "Something went wrong.";
 
             setChatHistory((previousHistory) => [

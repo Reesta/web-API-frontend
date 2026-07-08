@@ -6,9 +6,8 @@ import { updateAdminBookingAction } from "@/lib/actions/admin/admin-booking-acti
 import { AdminBooking, AdminBookingPayload } from "@/lib/api/admin/admin-bookings";
 
 const statuses: AdminBookingPayload["status"][] = [
+  "Pending",
   "Confirmed",
-  "Upcoming",
-  "Completed",
   "Cancelled",
 ];
 

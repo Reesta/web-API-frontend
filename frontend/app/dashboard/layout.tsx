@@ -1,9 +1,14 @@
 import Link from "next/link";
-import { History } from "lucide-react";
 import { redirect } from "next/navigation";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from "@/app/_context/AuthContext";
 import { getCurrentUserAction } from "@/lib/actions/auth-action";
+import { getStaysAction } from "@/lib/actions/stay-action";
+import { getTrailsAction } from "@/lib/actions/trail-action";
+import { Stay } from "@/lib/api/stays";
+import { Trail } from "@/lib/api/trails";
+import AiChatWidget from "./_components/AiChatWidget";
 import DashboardNav from "./_components/DashboardNav";
+import DashboardSearch from "./_components/DashboardSearch";
 import LogoutButton from "./_components/LogoutButton";
 import ProfileImage from "./_components/ProfileImage";
 
@@ -19,6 +24,12 @@ export default async function DashboardLayout({
   }
 
   const user = response.data;
+  const [trailsResult, staysResult] = await Promise.all([
+    getTrailsAction(),
+    getStaysAction(),
+  ]);
+  const trails: Trail[] = trailsResult.success && trailsResult.data ? trailsResult.data : [];
+  const stays: Stay[] = staysResult.success && staysResult.data ? staysResult.data : [];
 
   return (
     <AuthProvider initialUser={user}>
@@ -54,19 +65,14 @@ export default async function DashboardLayout({
               <p className="text-base font-black text-[#f5f5f5]">Yeti Trek</p>
               <span className="text-[13px] text-[#9aa8b8]">Ready for your next adventure?</span>
             </div>
-            <Link
-              href="/dashboard/booking-history"
-              className="inline-flex h-11 items-center gap-2 rounded-lg border border-[#e9a127]/35 bg-[#11191b] px-4 text-sm font-black text-[#e9a127] transition hover:border-[#e9a127] hover:bg-[#171f20]"
-            >
-              <History size={17} />
-              Booking History
-            </Link>
+            <DashboardSearch trails={trails} stays={stays} />
           </header>
 
           <main className="w-full max-w-[1120px] px-8 pb-14 pt-6 max-[1000px]:p-[22px]">
             {children}
           </main>
         </section>
+        <AiChatWidget />
       </div>
     </AuthProvider>
   );

@@ -4,7 +4,7 @@ import { BookingType } from "../types/booking.type";
 export interface IBooking extends BookingType, Document {
   _id: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
-  status: "Confirmed" | "Upcoming" | "Completed" | "Cancelled";
+  status: "Pending" | "Confirmed" | "Cancelled";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,8 +36,8 @@ const BookingMongoSchema = new Schema<IBooking>(
     specialRequest: { type: String, default: "", trim: true },
     status: {
       type: String,
-      enum: ["Confirmed", "Upcoming", "Completed", "Cancelled"],
-      default: "Confirmed",
+      enum: ["Pending", "Confirmed", "Cancelled"],
+      default: "Pending",
     },
   },
   { timestamps: true },

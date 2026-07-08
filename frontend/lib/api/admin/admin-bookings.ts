@@ -6,7 +6,7 @@ export type AdminBooking = Booking & {
 };
 
 export type AdminBookingPayload = {
-  status: "Confirmed" | "Upcoming" | "Completed" | "Cancelled";
+  status: "Pending" | "Confirmed" | "Cancelled";
   startDate: string;
   endDate?: string;
   travelers: number;

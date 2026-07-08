@@ -11,36 +11,9 @@ import {
 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getCurrentUserAction } from "@/lib/actions/auth-action";
-
-const treks = [
-  {
-    title: "Everest Base Camp",
-    image: "/trails5.png",
-    difficulty: "Hard",
-    altitude: "5,364m",
-    duration: "8 Days",
-    text: "The classic route through Sherpa villages to the foot of Everest.",
-    href: "/dashboard/trails/everest-base-camp",
-  },
-  {
-    title: "Annapurna Base Camp",
-    image: "/trail6.png",
-    difficulty: "Mod",
-    altitude: "4,130m",
-    duration: "7 Days",
-    text: "A scenic sanctuary trek surrounded by the Annapurna massif.",
-    href: "/dashboard/trails/annapurna-base-camp",
-  },
-  {
-    title: "Gokyo Lakes",
-    image: "/trail7.png",
-    difficulty: "Hard",
-    altitude: "4,790m",
-    duration: "5 Days",
-    text: "Turquoise alpine lakes and wide Himalayan views above the clouds.",
-    href: "/dashboard/trails/gokyo-lakes",
-  },
-];
+import { getTrailsAction } from "@/lib/actions/trail-action";
+import { Trail } from "@/lib/api/trails";
+import { resolveImageUrl } from "@/lib/api/image-url";
 
 const stats = [
   { label: "Saved routes", value: "06", icon: Compass },
@@ -56,6 +29,12 @@ export default async function DashboardPage() {
   }
 
   const user = response.data;
+  const trailsResult = await getTrailsAction();
+  const popularTreks: Trail[] =
+    trailsResult.success && trailsResult.data ? trailsResult.data.slice(0, 3) : [];
+  const planTrekHref = popularTreks[0]
+    ? `/dashboard/trails/${popularTreks[0].slug}/plan`
+    : "/dashboard/trails";
 
   return (
     <section className="grid gap-8">
@@ -155,14 +134,14 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-3 gap-6 max-[1100px]:grid-cols-2 max-[700px]:grid-cols-1">
-        {treks.map((trek) => (
+        {popularTreks.length ? popularTreks.map((trek) => (
           <article
-            key={trek.title}
+            key={trek.id}
             className="overflow-hidden rounded-[18px] border border-white/10 bg-[#0d1314] shadow-xl shadow-black/20 transition hover:-translate-y-1"
           >
             <div
               className="relative h-[210px] bg-cover bg-center"
-              style={{ backgroundImage: `url(${trek.image})` }}
+              style={{ backgroundImage: `url(${resolveImageUrl(trek.image)})` }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#0d1314] via-transparent to-transparent" />
               <span className="absolute right-4 top-4 rounded-full bg-[#e42d4f] px-3 py-1 text-[10px] font-black uppercase text-white">
@@ -174,7 +153,7 @@ export default async function DashboardPage() {
               <div className="flex items-start justify-between gap-4">
                 <h3 className="text-xl font-black text-white">{trek.title}</h3>
                 <Link
-                  href={trek.href}
+                  href={`/dashboard/trails/${trek.slug}`}
                   aria-label={`Open ${trek.title}`}
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e9a127] text-[#121a18]"
                 >
@@ -192,7 +171,11 @@ export default async function DashboardPage() {
               </div>
             </div>
           </article>
-        ))}
+        )) : (
+          <div className="col-span-full rounded-[18px] border border-white/10 bg-[#0d1314] p-8 text-center text-[#aeb5b4]">
+            No popular treks are available yet.
+          </div>
+        )}
       </div>
 
       <div className="grid gap-5 rounded-[22px] border border-white/10 bg-[#0d1314] p-6 shadow-xl shadow-black/20 md:grid-cols-[1fr_auto] md:items-center">
@@ -208,7 +191,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <Link
-          href="/dashboard/trails/everest-base-camp/plan"
+          href={planTrekHref}
           className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#e9a127] px-6 text-sm font-black text-[#121a18]"
         >
           Plan Trek

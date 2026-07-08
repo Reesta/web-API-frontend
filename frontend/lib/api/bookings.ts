@@ -20,7 +20,7 @@ export type BookingPayload = {
 export type Booking = BookingPayload & {
   id: string;
   userId: string;
-  status: "Confirmed" | "Upcoming" | "Completed" | "Cancelled";
+  status: "Pending" | "Confirmed" | "Cancelled";
   createdAt: string;
   updatedAt: string;
 };

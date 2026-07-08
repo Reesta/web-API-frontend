@@ -10,10 +10,14 @@ import {
   Users,
 } from "lucide-react";
 import { notFound } from "next/navigation";
+import { getCurrentUserAction } from "@/lib/actions/auth-action";
+import { getStayReviewsAction } from "@/lib/actions/review-action";
 import { getStayBySlugAction } from "@/lib/actions/stay-action";
 import { Stay } from "@/lib/api/stays";
+import { StayReviewResponse } from "@/lib/api/reviews";
 import { resolveImageUrl } from "@/lib/api/image-url";
 import { getAmenityIcon } from "@/lib/stay-amenities";
+import StayReviews from "./StayReviews";
 
 export default async function StayDetailPage({
   params,
@@ -21,8 +25,16 @@ export default async function StayDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const result = await getStayBySlugAction(slug);
+  const [result, reviewsResult, userResult] = await Promise.all([
+    getStayBySlugAction(slug),
+    getStayReviewsAction(slug),
+    getCurrentUserAction(),
+  ]);
   const stay = result.success ? (result.data as Stay | null) : null;
+  const reviewData =
+    reviewsResult.success && reviewsResult.data
+      ? (reviewsResult.data as StayReviewResponse)
+      : { reviews: [], summary: { averageRating: 0, totalReviews: 0 } };
 
   if (!stay) {
     notFound();
@@ -69,7 +81,14 @@ export default async function StayDetailPage({
               </p>
             </div>
 
-            <div className="text-right max-[700px]:text-left">
+          <div className="text-right max-[700px]:text-left">
+              <div className="mb-3 flex items-center justify-end gap-2 text-sm text-[#d7dfde] max-[700px]:justify-start">
+                <span className="text-[#e9a127]">★</span>
+                <strong>{reviewData.summary.averageRating.toFixed(1)}</strong>
+                <span className="text-[#8e9898]">
+                  ({reviewData.summary.totalReviews} reviews)
+                </span>
+              </div>
               <strong className="text-2xl font-black text-[#e9a127]">
                 {stay.price}
               </strong>
@@ -175,6 +194,13 @@ export default async function StayDetailPage({
           </div>
         </aside>
       </div>
+
+      <StayReviews
+        staySlug={stay.slug}
+        initialReviews={reviewData.reviews}
+        summary={reviewData.summary}
+        currentUser={userResult.success ? userResult.data : null}
+      />
     </section>
   );
 }

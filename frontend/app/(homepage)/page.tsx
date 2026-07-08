@@ -15,7 +15,7 @@ import {
 const destinations = [
   {
     title: "Everest Base Camp",
-    image: "/mount.png",
+    image: "/stay4.png",
     duration: "8 Days",
     level: "Hard",
     type: "High Altitude",
@@ -39,7 +39,7 @@ const destinations = [
   },
   {
     title: "Langtang Valley",
-    image: "/stay.png",
+    image: "/signup.png",
     duration: "6 Days",
     level: "Easy",
     type: "Village Trail",
@@ -75,7 +75,7 @@ const reasons = [
 export default function Home() {
   return (
     <div className="bg-[#070b13] text-white">
-      <section id="explore" className="relative min-h-screen pt-[76px]">
+      <section id="explore" className="relative min-h-screen scroll-mt-[76px] pt-[76px]">
         <Image
           src="/home.png"
           alt="Nepal mountain lodge"
@@ -104,14 +104,14 @@ export default function Home() {
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 href="/register"
-                className="rounded-full bg-[#D89A2B] px-8 py-4 text-sm font-black text-black transition hover:bg-[#e7ad3e]"
+                className="rounded-full bg-[#D89A2B] px-8 py-4 text-sm font-black text-black shadow-xl shadow-[#D89A2B]/20 transition hover:-translate-y-0.5 hover:bg-[#e7ad3e]"
               >
                 Start Your Journey
               </Link>
 
               <Link
                 href="#destinations"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-black text-white transition hover:border-[#D89A2B]"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.03] px-8 py-4 text-sm font-black text-white transition hover:-translate-y-0.5 hover:border-[#D89A2B]"
               >
                 View Destinations <ArrowRight size={17} />
               </Link>
@@ -120,7 +120,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-28">
+      <section className="border-y border-white/10 bg-[#090f18] py-24">
         <div className="mx-auto grid w-[min(1180px,calc(100%_-_120px))] gap-8 sm:grid-cols-2 lg:grid-cols-4 max-[1000px]:w-[min(100%-40px,1180px)]">
           {stats.map((stat) => {
             const Icon = stat.icon;
@@ -128,7 +128,7 @@ export default function Home() {
             return (
               <div
                 key={stat.label}
-                className="rounded-3xl border border-white/10 bg-[#101822] p-8 text-center shadow-xl shadow-black/20"
+                className="rounded-2xl border border-white/10 bg-[#101822] p-8 text-center shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-[#D89A2B]/40"
               >
                 <Icon size={34} className="mx-auto text-[#D89A2B]" />
                 <h3 className="mt-5 text-3xl font-black">{stat.value}</h3>
@@ -139,7 +139,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="destinations" className="pb-36 pt-10">
+      <section id="destinations" className="scroll-mt-[76px] bg-[#070b13] py-32">
         <div className="mx-auto w-[min(1180px,calc(100%_-_120px))] max-[1000px]:w-[min(100%-40px,1180px)]">
           <div className="mx-auto max-w-3xl text-center">
             <EyebrowCenter text="Destinations" />
@@ -154,23 +154,23 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mx-auto mt-20 grid max-w-[1180px] gap-8 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mx-auto mt-16 grid max-w-[1180px] gap-7 md:grid-cols-2 xl:grid-cols-4">
             {destinations.map((item) => (
               <article
                 key={item.title}
-                className="overflow-hidden rounded-3xl border border-white/10 bg-[#101822] shadow-xl shadow-black/20 transition hover:-translate-y-2"
+                className="group overflow-hidden rounded-2xl border border-white/10 bg-[#101822] shadow-xl shadow-black/20 transition duration-300 hover:-translate-y-2 hover:border-[#D89A2B]/40"
               >
-                <div className="relative h-72">
+                <div className="relative h-72 overflow-hidden">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
                     sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover"
+                    className="object-cover transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
 
-                  <span className="absolute left-5 top-5 rounded-full bg-[#D89A2B] px-4 py-1 text-xs font-black text-black">
+                  <span className="absolute left-5 top-5 rounded-full bg-[#D89A2B] px-4 py-1 text-xs font-black text-black shadow-lg shadow-black/30">
                     {item.level}
                   </span>
                 </div>
@@ -193,6 +193,13 @@ export default function Home() {
                   <p className="mt-4 text-sm leading-7 text-slate-400">
                     {item.text}
                   </p>
+
+                  <Link
+                    href="/login"
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-black text-[#D89A2B] transition hover:text-[#e7ad3e]"
+                  >
+                    Plan this route <ArrowRight size={16} />
+                  </Link>
                 </div>
               </article>
             ))}
@@ -200,9 +207,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="py-40">
+      <section id="about" className="scroll-mt-[76px] border-y border-white/10 bg-[#090f18] py-32">
         <div className="mx-auto grid w-[min(1180px,calc(100%_-_120px))] items-center gap-24 lg:grid-cols-2 max-[1000px]:w-[min(100%-40px,1180px)]">
-          <div className="relative h-[520px] overflow-hidden rounded-3xl border border-white/10 shadow-xl shadow-black/30">
+          <div className="relative h-[520px] overflow-hidden rounded-2xl border border-white/10 shadow-xl shadow-black/30">
             <Image
               src="/stay.png"
               alt="Mountain stay in Nepal"
@@ -211,6 +218,14 @@ export default function Home() {
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            <div className="absolute bottom-6 left-6 rounded-2xl border border-white/10 bg-black/45 p-5 backdrop-blur-md">
+              <p className="text-xs font-black uppercase tracking-[0.25em] text-[#D89A2B]">
+                Built for Nepal
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Trails, stays, and plans in one place
+              </p>
+            </div>
           </div>
 
           <div>
@@ -226,7 +241,7 @@ export default function Home() {
               prepare with confidence.
             </p>
 
-            <div className="mt-10 grid gap-5">
+            <div className="mt-10 grid gap-4">
               <AboutPoint text="Curated routes for every level" />
               <AboutPoint text="Carefully selected mountain stays" />
               <AboutPoint text="Simple planning from start to finish" />
@@ -235,7 +250,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="why-us" className="py-40">
+      <section id="why-us" className="scroll-mt-[76px] py-32">
         <div className="mx-auto w-[min(1180px,calc(100%_-_120px))] max-[1000px]:w-[min(100%-40px,1180px)]">
           <div className="mx-auto max-w-3xl text-center">
             <EyebrowCenter text="Why choose us" />
@@ -257,9 +272,9 @@ export default function Home() {
               return (
                 <article
                   key={reason.title}
-                  className="rounded-3xl border border-white/10 bg-[#101822] p-8 shadow-xl shadow-black/20"
+                  className="rounded-2xl border border-white/10 bg-[#101822] p-8 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-[#D89A2B]/40"
                 >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D89A2B]/15 text-[#D89A2B]">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#D89A2B]/15 text-[#D89A2B]">
                     <Icon size={28} />
                   </div>
 
@@ -303,7 +318,7 @@ function EyebrowCenter({ text }: { text: string }) {
 
 function AboutPoint({ text }: { text: string }) {
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-[#101822] p-5">
+    <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-[#101822] p-5 shadow-lg shadow-black/10">
       <CheckCircle2 size={21} className="shrink-0 text-[#D89A2B]" />
       <span className="text-sm font-bold text-slate-200">{text}</span>
     </div>

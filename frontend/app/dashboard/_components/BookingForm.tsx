@@ -45,6 +45,21 @@ export default function BookingForm({
       return;
     }
 
+    if (payload.itemType === "stay" && !payload.endDate) {
+      setError("Check-out date is required for stay bookings.");
+      return;
+    }
+
+    if (payload.startDate && payload.endDate) {
+      const start = new Date(payload.startDate);
+      const end = new Date(payload.endDate);
+
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+        setError("Check-out date must be after the check-in date.");
+        return;
+      }
+    }
+
     startTransition(async () => {
       const result = await createBookingAction(payload);
       if (!result.success) {

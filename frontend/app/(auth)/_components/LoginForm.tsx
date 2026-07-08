@@ -12,7 +12,7 @@ const inputBoxClass =
 const labelClass =
   "mb-2.5 block text-[13px] font-semibold uppercase tracking-[1.5px] text-[#d4d6da]";
 
-export default function LoginForm() {
+export default function LoginForm({ nextPath }: { nextPath?: string }) {
   const [formData, setFormData] = useState<LoginFormValues>({
     email: "",
     password: "",
@@ -53,7 +53,7 @@ export default function LoginForm() {
         return;
       }
 
-      window.location.href = "/dashboard";
+      window.location.href = nextPath?.startsWith("/") ? nextPath : "/dashboard";
     } catch (error) {
       console.error("Login Error:", error);
       setError("Something went wrong");
