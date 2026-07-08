@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from "@/app/_context/AuthContext";
 import { getCurrentUserAction } from "@/lib/actions/auth-action";
 import { getStaysAction } from "@/lib/actions/stay-action";
 import { getTrailsAction } from "@/lib/actions/trail-action";

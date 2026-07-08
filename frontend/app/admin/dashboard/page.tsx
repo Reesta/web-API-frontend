@@ -4,6 +4,7 @@ import {
   Activity,
   ArrowRight,
   BadgeCheck,
+  BookOpenText,
   ChevronRight,
   CircleCheck,
   Clock3,
@@ -23,6 +24,7 @@ const features = [
   { label: "Trail catalogue", detail: "Manage trek routes and trip details.", icon: Map, href: "/admin/trails", tone: "bg-sky-400/15 text-sky-300", available: true },
   { label: "Stay listings", detail: "Manage lodges and accommodation data.", icon: Hotel, href: "/admin/stays", tone: "bg-emerald-400/15 text-emerald-300", available: true },
   { label: "Booking history", detail: "Review user trail and stay reservations.", icon: ReceiptText, href: "/admin/bookings", tone: "bg-violet-400/15 text-violet-300", available: true },
+  { label: "Blog journal", detail: "Publish guides and approve user stories.", icon: BookOpenText, href: "/admin/blogs", tone: "bg-amber-400/15 text-amber-300", available: true },
 ];
 
 export default async function AdminDashboardPage() {

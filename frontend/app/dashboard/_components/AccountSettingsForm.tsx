@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Camera, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { updateProfileAction } from "@/lib/actions/auth-action";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/app/_context/AuthContext";
 
 const fieldClass = "grid gap-2";
 const labelClass =

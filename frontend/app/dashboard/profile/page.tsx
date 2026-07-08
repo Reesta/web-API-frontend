@@ -1,29 +1,42 @@
 import {
-  ArrowRight,
   BadgeCheck,
   Camera,
-  History,
   KeyRound,
   Mail,
   Phone,
   Shield,
   UserRound,
 } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getBlogsAction } from "@/lib/actions/blog-action";
+import { getMyBookingsAction } from "@/lib/actions/booking-action";
 import { getCurrentUserAction } from "@/lib/actions/auth-action";
+import { Blog } from "@/lib/api/blogs";
+import { Booking } from "@/lib/api/bookings";
 import AccountSettingsForm from "../_components/AccountSettingsForm";
 import PasswordUpdateForm from "../_components/PasswordUpdateForm";
 import ProfileImage from "../_components/ProfileImage";
+import BookmarkedBlogs from "./_components/BookmarkedBlogs";
+import ProfileBookingHistory from "./_components/ProfileBookingHistory";
 
 export default async function ProfilePage() {
-  const response = await getCurrentUserAction();
+  const [response, blogsResult, bookingsResult] = await Promise.all([
+    getCurrentUserAction(),
+    getBlogsAction(),
+    getMyBookingsAction(),
+  ]);
 
   if (!response?.success || !response.data) {
     redirect("/login");
   }
 
   const user = response.data;
+  const blogs: Blog[] = blogsResult.success && blogsResult.data ? blogsResult.data : [];
+  const bookings: Booking[] =
+    bookingsResult.success && bookingsResult.data
+      ? bookingsResult.data.filter((booking: Booking) => booking.userId === user.id)
+      : [];
+  const userKey = user.id || user.email;
 
   return (
     <section className="grid gap-5">
@@ -60,6 +73,9 @@ export default async function ProfilePage() {
         </div>
       </div>
 
+      <BookmarkedBlogs blogs={blogs} userKey={userKey} />
+      <ProfileBookingHistory bookings={bookings} />
+
       <div className="grid grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)] gap-[18px] max-[1000px]:grid-cols-1">
         <div id="edit-profile" className="min-w-0 overflow-hidden rounded-[13px] border border-white/10 bg-[#282c2d] p-6">
           <div className="mb-5 flex items-start gap-3">
@@ -75,22 +91,6 @@ export default async function ProfilePage() {
         </div>
 
         <div className="grid gap-[18px]">
-          <Link
-            href="/dashboard/booking-history"
-            className="group flex items-center justify-between gap-4 rounded-[13px] border border-[#e0a12b]/25 bg-[#101820] p-5 transition hover:border-[#e0a12b]/70 hover:bg-[#131d26]"
-          >
-            <span className="flex items-center gap-3">
-              <span className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-lg bg-[#e0a12b]/15 text-[#e0a12b]">
-                <History size={19} />
-              </span>
-              <span>
-                <span className="block text-base font-black text-white">Booking History</span>
-                <span className="mt-1 block text-sm text-[#aeb8c3]">View your trail and stay reservations.</span>
-              </span>
-            </span>
-            <ArrowRight size={18} className="shrink-0 text-[#e0a12b] transition group-hover:translate-x-1" />
-          </Link>
-
           <div id="change-password" className="min-w-0 overflow-hidden rounded-[13px] border border-white/10 bg-[#282c2d] p-6">
             <div className="mb-5 flex items-start gap-3">
               <span className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-lg bg-[#e0a12b]/15 text-[#e0a12b]">
