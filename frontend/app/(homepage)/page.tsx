@@ -11,6 +11,10 @@ import {
   ShieldCheck,
   Users,
 } from "lucide-react";
+import { getBlogsAction } from "@/lib/actions/blog-action";
+import { getCurrentUserAction } from "@/lib/actions/auth-action";
+import { Blog } from "@/lib/api/blogs";
+import BlogCard from "../dashboard/blogs/_components/BlogCard";
 
 const destinations = [
   {
@@ -72,7 +76,18 @@ const reasons = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const [blogResult, currentUser] = await Promise.all([
+    getBlogsAction(),
+    getCurrentUserAction(),
+  ]);
+  const blogs: Blog[] = blogResult.success && blogResult.data ? blogResult.data : [];
+  const homepageBlogs = blogs.slice(0, 3);
+  const isAuthenticated = Boolean(currentUser.success && currentUser.data);
+  const userKey = currentUser.success && currentUser.data
+    ? currentUser.data.id || currentUser.data.email
+    : undefined;
+
   return (
     <div className="bg-[#070b13] text-white">
       <section id="explore" className="relative min-h-screen scroll-mt-[76px] pt-[76px]">
@@ -203,6 +218,45 @@ export default function Home() {
                 </div>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="blogs" className="scroll-mt-[76px] border-y border-white/10 bg-[#090f18] py-32">
+        <div className="mx-auto w-[min(1180px,calc(100%_-_120px))] max-[1000px]:w-[min(100%-40px,1180px)]">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-3xl">
+              <Eyebrow text="Trek journal" />
+              <h2 className="mt-5 text-4xl font-black leading-tight md:text-5xl">
+                Read trekking guides before you login
+              </h2>
+              <p className="mt-5 text-base leading-8 text-slate-400">
+                Browse safety tips, culture notes, weather updates, gear advice,
+                news, and community stories from the Yeti Trek journal.
+              </p>
+            </div>
+            <Link
+              href="/blogs"
+              className="inline-flex items-center gap-2 rounded-full bg-[#D89A2B] px-6 py-3 text-sm font-black text-black transition hover:bg-[#e7ad3e]"
+            >
+              Browse all blogs <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+            {homepageBlogs.length ? homepageBlogs.map((blog) => (
+              <BlogCard
+                key={blog.id}
+                blog={blog}
+                basePath="/blogs"
+                isAuthenticated={isAuthenticated}
+                userKey={userKey}
+              />
+            )) : (
+              <div className="rounded-2xl border border-white/10 bg-[#101822] p-8 text-slate-400 md:col-span-2 xl:col-span-3">
+                Blog articles will appear here after admins publish them.
+              </div>
+            )}
           </div>
         </div>
       </section>
