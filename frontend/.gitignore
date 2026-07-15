@@ -10,12 +10,10 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
 # next.js
 /.next/
 /out/
+/.swc/
 
 # production
 /build
