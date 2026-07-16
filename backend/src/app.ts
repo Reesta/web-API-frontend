@@ -15,6 +15,8 @@ import adminBlogRoutes from "../src/routes/admin/blog.route";
 import reviewRoutes from "../src/routes/review.route";
 import adminReviewRoutes from "../src/routes/admin/review.route";
 import aiRoutes from "../src/routes/ai.route";
+import momentRoutes from "../src/routes/moment.route";
+import adminMomentRoutes from "../src/routes/admin/moment.route";
 
 const app: Application = express();
 
@@ -43,12 +45,14 @@ app.use("/api/v1/bookings", bookingRoutes);
 app.use("/api/v1/blogs", blogRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/ai", aiRoutes);
+app.use("/api/v1/moments", momentRoutes);
 app.use("/api/v1/admin/users", adminUserRoutes);
 app.use("/api/v1/admin/trails", adminTrailRoutes);
 app.use("/api/v1/admin/stays", adminStayRoutes);
 app.use("/api/v1/admin/bookings", adminBookingRoutes);
 app.use("/api/v1/admin/blogs", adminBlogRoutes);
 app.use("/api/v1/admin/reviews", adminReviewRoutes);
+app.use("/api/v1/admin/moments", adminMomentRoutes);
 
 app.use((req: Request, res: Response) => {
   return res.status(404).json({
