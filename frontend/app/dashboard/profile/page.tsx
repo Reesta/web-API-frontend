@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getBlogsAction } from "@/lib/actions/blog-action";
+import { getMyBlogsAction } from "@/lib/actions/blog-action";
+import { getMyMomentsAction } from "@/lib/actions/moment-action";
 import { getMyBookingsAction } from "@/lib/actions/booking-action";
 import { getCurrentUserAction } from "@/lib/actions/auth-action";
 import { Blog } from "@/lib/api/blogs";
@@ -18,12 +20,16 @@ import PasswordUpdateForm from "../_components/PasswordUpdateForm";
 import ProfileImage from "../_components/ProfileImage";
 import BookmarkedBlogs from "./_components/BookmarkedBlogs";
 import ProfileBookingHistory from "./_components/ProfileBookingHistory";
+import MySubmissions from "./_components/MySubmissions";
+import { Moment } from "@/lib/api/moments";
 
 export default async function ProfilePage() {
-  const [response, blogsResult, bookingsResult] = await Promise.all([
+  const [response, blogsResult, bookingsResult, myBlogsResult, myMomentsResult] = await Promise.all([
     getCurrentUserAction(),
     getBlogsAction(),
     getMyBookingsAction(),
+    getMyBlogsAction(),
+    getMyMomentsAction(),
   ]);
 
   if (!response?.success || !response.data) {
@@ -37,6 +43,8 @@ export default async function ProfilePage() {
       ? bookingsResult.data.filter((booking: Booking) => booking.userId === user.id)
       : [];
   const userKey = user.id || user.email;
+  const myBlogs: Blog[] = myBlogsResult.success && myBlogsResult.data ? myBlogsResult.data : [];
+  const myMoments: Moment[] = myMomentsResult.success && myMomentsResult.data ? myMomentsResult.data : [];
 
   return (
     <section className="grid gap-5">
@@ -75,6 +83,7 @@ export default async function ProfilePage() {
 
       <BookmarkedBlogs blogs={blogs} userKey={userKey} />
       <ProfileBookingHistory bookings={bookings} />
+      <MySubmissions moments={myMoments} blogs={myBlogs} />
 
       <div className="grid grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)] gap-[18px] max-[1000px]:grid-cols-1">
         <div id="edit-profile" className="min-w-0 overflow-hidden rounded-[13px] border border-white/10 bg-[#282c2d] p-6">

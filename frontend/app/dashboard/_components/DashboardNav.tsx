@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpenText, Home, Hotel, Map, User } from "lucide-react";
+import { BookOpenText, Home, Hotel, Images, Map, User } from "lucide-react";
 
 const navItems = [
   {
@@ -26,6 +26,11 @@ const navItems = [
     icon: BookOpenText,
   },
   {
+    href: "/dashboard/moments",
+    label: "Trek Moments",
+    icon: Images,
+  },
+  {
     href: "/dashboard/profile",
     label: "Profile",
     icon: User,
@@ -36,7 +41,7 @@ export default function DashboardNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="py-[18px] max-[1000px]:grid max-[1000px]:grid-cols-5 max-[1000px]:overflow-x-auto max-[1000px]:py-0">
+    <nav className="py-[18px] max-[1000px]:grid max-[1000px]:grid-cols-6 max-[1000px]:overflow-x-auto max-[1000px]:py-0">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive =

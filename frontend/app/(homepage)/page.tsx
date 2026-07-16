@@ -15,6 +15,9 @@ import { getBlogsAction } from "@/lib/actions/blog-action";
 import { getCurrentUserAction } from "@/lib/actions/auth-action";
 import { Blog } from "@/lib/api/blogs";
 import BlogCard from "../dashboard/blogs/_components/BlogCard";
+import { getMomentsAction } from "@/lib/actions/moment-action";
+import { Moment } from "@/lib/api/moments";
+import { resolveImageUrl } from "@/lib/api/image-url";
 
 const destinations = [
   {
@@ -77,12 +80,14 @@ const reasons = [
 ];
 
 export default async function Home() {
-  const [blogResult, currentUser] = await Promise.all([
+  const [blogResult, currentUser, momentResult] = await Promise.all([
     getBlogsAction(),
     getCurrentUserAction(),
+    getMomentsAction(),
   ]);
   const blogs: Blog[] = blogResult.success && blogResult.data ? blogResult.data : [];
   const homepageBlogs = blogs.slice(0, 3);
+  const moments: Moment[] = momentResult.success && momentResult.data ? momentResult.data : [];
   const isAuthenticated = Boolean(currentUser.success && currentUser.data);
   const userKey = currentUser.success && currentUser.data
     ? currentUser.data.id || currentUser.data.email
@@ -218,6 +223,26 @@ export default async function Home() {
                 </div>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="moments" className="scroll-mt-[76px] border-y border-white/10 bg-[#090f18] py-32">
+        <div className="mx-auto w-[min(1180px,calc(100%_-_120px))] max-[1000px]:w-[min(100%-40px,1180px)]">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div><Eyebrow text="Community stories" /><h2 className="mt-5 text-4xl font-black md:text-5xl">Trek Moments</h2><p className="mt-4 max-w-2xl leading-8 text-slate-400">Explore memorable experiences shared by trekkers and approved by our team.</p></div>
+            {isAuthenticated ? (
+              <Link href="/dashboard/moments" className="rounded-full bg-[#D89A2B] px-6 py-3 text-center text-sm font-black text-black">
+                Share your moment
+              </Link>
+            ) : (
+              <Link href="/login" className="rounded-full border border-[#D89A2B]/50 px-6 py-3 text-center text-sm font-black text-[#D89A2B]">
+                Login to share a moment
+              </Link>
+            )}
+          </div>
+          <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+            {moments.length ? moments.map((moment) => <article key={moment.id} className="overflow-hidden rounded-2xl border border-white/10 bg-[#101822]"><div className="relative h-72"><Image src={resolveImageUrl(moment.image)} alt={moment.title} fill unoptimized className="object-cover" /></div><div className="p-6"><p className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#D89A2B]"><MapPin size={14} />{moment.location}</p><h3 className="mt-3 text-2xl font-black">{moment.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-400">{moment.caption}</p><p className="mt-5 text-xs text-slate-500">Shared by {moment.uploadedBy.fullName}</p></div></article>) : <div className="rounded-2xl border border-white/10 bg-[#101822] p-8 text-slate-400 md:col-span-2 xl:col-span-3">Approved Trek Moments will appear here.</div>}
           </div>
         </div>
       </section>

@@ -36,6 +36,7 @@ export default function HomepageLayout({
             <div className="mt-5 grid gap-3 text-sm text-slate-400">
               <Link href="/#explore" className="hover:text-white">Home</Link>
               <Link href="/#destinations" className="hover:text-white">Destinations</Link>
+              <Link href="/#moments" className="hover:text-white">Trek Moments</Link>
               <Link href="/#blogs" className="hover:text-white">Blogs</Link>
               <Link href="/#about" className="hover:text-white">About Us</Link>
               <Link href="/#why-us" className="hover:text-white">Why Choose Us</Link>

@@ -7,6 +7,7 @@ import { Mountain } from "lucide-react";
 const navItems = [
   { label: "Explore", href: "/#explore", id: "explore" },
   { label: "Destinations", href: "/#destinations", id: "destinations" },
+  { label: "Trek Moments", href: "/#moments", id: "moments" },
   { label: "Blogs", href: "/#blogs", id: "blogs" },
   { label: "About", href: "/#about", id: "about" },
   { label: "Why Us", href: "/#why-us", id: "why-us" },

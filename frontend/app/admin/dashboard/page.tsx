@@ -13,6 +13,7 @@ import {
   Map,
   ReceiptText,
   Star,
+  Images,
   ShieldCheck,
   Sparkles,
   Users,
@@ -27,6 +28,7 @@ const features = [
   { label: "Booking history", detail: "Review user trail and stay reservations.", icon: ReceiptText, href: "/admin/bookings", tone: "bg-violet-400/15 text-violet-300", available: true },
   { label: "Blog journal", detail: "Publish guides and approve user stories.", icon: BookOpenText, href: "/admin/blogs", tone: "bg-amber-400/15 text-amber-300", available: true },
   { label: "Stay reviews", detail: "Moderate ratings, comments, and helpful counts.", icon: Star, href: "/admin/reviews", tone: "bg-rose-400/15 text-rose-300", available: true },
+  { label: "Trek Moments", detail: "Approve, edit, reject, and remove traveler moments.", icon: Images, href: "/admin/moments", tone: "bg-cyan-400/15 text-cyan-300", available: true },
 ];
 
 export default async function AdminDashboardPage() {
