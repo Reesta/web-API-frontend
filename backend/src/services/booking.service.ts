@@ -136,7 +136,16 @@ export class BookingService {
     }
 
     if (booking.status !== "Confirmed" && updatedBooking.status === "Confirmed") {
-      await this.sendBookingConfirmationEmail(updatedBooking);
+      try {
+        await this.sendBookingConfirmationEmail(updatedBooking);
+      } catch (error) {
+        // The booking has already been persisted. Email delivery is a secondary
+        // side effect and must not make a successful update look unsuccessful.
+        console.error(
+          `Booking ${bookingId} was confirmed, but its confirmation email could not be sent:`,
+          error instanceof Error ? error.message : "Unknown email error",
+        );
+      }
     }
 
     return this.toSafeBooking(updatedBooking);
