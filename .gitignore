@@ -18,3 +18,5 @@ backend/.idea/
 .codex/
 frontend/next-dev.log
 frontend/next-dev.err.log
+frontend/playwright-report/
+frontend/test-results/
