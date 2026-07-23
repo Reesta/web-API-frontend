@@ -768,6 +768,25 @@ describe("booking API routes", () => {
     expect(mockSendEmail).toHaveBeenCalledTimes(1);
   });
 
+  it("keeps a confirmed booking successful when confirmation email delivery fails", async () => {
+    mockUserRepository.getUserById.mockResolvedValue(user({ id: ADMIN_ID, role: "admin" }));
+    mockBookingRepository.getById.mockResolvedValue(booking({ status: "Pending" }));
+    mockBookingRepository.update.mockResolvedValue(booking({ status: "Confirmed" }));
+    mockSendEmail.mockRejectedValue(new Error("SMTP authentication failed"));
+    const consoleError = jest.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const res = await request(app)
+      .patch("/api/v1/admin/bookings/booking-1")
+      .set(auth(adminToken()))
+      .send({ status: "Confirmed" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.status).toBe("Confirmed");
+    expect(mockSendEmail).toHaveBeenCalledTimes(1);
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
   it("61 admin can cancel booking without sending confirmation email", async () => {
     mockUserRepository.getUserById.mockResolvedValue(user({ id: ADMIN_ID, role: "admin" }));
     mockBookingRepository.getById.mockResolvedValue(booking({ status: "Pending" }));
